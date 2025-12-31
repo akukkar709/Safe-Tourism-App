@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Mobile Expo App - Sign Up
 
 A React Native mobile application built with Expo featuring a beautiful sign-up page.
@@ -81,3 +82,6 @@ To integrate with a backend:
 ## License
 
 MIT
+=======
+# Safe-Tourism-App
+>>>>>>> 9d4882ffa6a90a11e181318b7135c4e975b4e802
