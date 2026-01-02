@@ -1,30 +1,8 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-
-// Your Firebase configuration
-// Replace these values with your actual Firebase project credentials
-const firebaseConfig = {
-  apiKey: "AIzaSyCqBvsMb7rm0QbEOdbMRNnlJNcXIxKdaXo",
-  authDomain: "st-mobile-app-6404e.firebaseapp.com",
-  projectId: "st-mobile-app-6404e",
-  storageBucket: "st-mobile-app-6404e.firebasestorage.app",
-  messagingSenderId: "199149347159",
-  appId: "1:199149347159:web:e58b497ff67454c801de12"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase Authentication and Firestore
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-
-export default app;
 
 
 
-// Import the functions you need from the SDKs you need
+
+// // Import the functions you need from the SDKs you need
 // import { initializeApp } from 'firebase/app';
 // import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 // import { getFirestore } from 'firebase/firestore';
@@ -65,3 +43,35 @@ export default app;
 // // Export initialized auth and db
 // export { auth, db };
 // export default app;
+
+
+
+import { initializeApp } from "firebase/app";
+import {
+  initializeAuth,
+  getReactNativePersistence,
+} from "firebase/auth";
+
+import { getFirestore } from "firebase/firestore";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCqBvsMb7rm0QbEOdbMRNnlJNcXIxKdaXo",
+  authDomain: "st-mobile-app-6404e.firebaseapp.com",
+  projectId: "st-mobile-app-6404e",
+  storageBucket: "st-mobile-app-6404e.firebasestorage.app",
+  messagingSenderId: "199149347159",
+  appId: "1:199149347159:web:e58b497ff67454c801de12",
+  measurementId: "G-HGH54N75N6"
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
+
+const db = getFirestore(app);
+
+export { app, auth };

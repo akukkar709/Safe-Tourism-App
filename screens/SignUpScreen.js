@@ -16,12 +16,16 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase.config';
 
+
 export default function SignUpScreen({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -298,12 +302,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   signUpButton: {
-    backgroundColor: '#6366f1',
+    backgroundColor: '#39ca22ff',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
     marginTop: 8,
-    shadowColor: '#6366f1',
+    shadowColor: '#63f16dff',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -331,8 +335,216 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   loginLink: {
-    color: '#6366f1',
+    color: '#39ca22ff',
     fontSize: 14,
     fontWeight: '600',
   },
 });
+
+
+// import React, { useState } from "react";
+// import {
+//   View,
+//   Text,
+//   TextInput,
+//   TouchableOpacity,
+//   StyleSheet,
+//   KeyboardAvoidingView,
+//   Platform,
+//   ScrollView,
+//   Alert,
+//   ActivityIndicator,
+// } from "react-native";
+// import { StatusBar } from "expo-status-bar";
+
+// import { createUserWithEmailAndPassword } from "firebase/auth";
+// import { doc, setDoc } from "firebase/firestore";
+// import { auth, db } from "../firebase"; // ✅ ONLY ONE IMPORT
+
+// export default function SignUpScreen({ navigation }) {
+//   const [name, setName] = useState("");
+//   const [email, setEmail] = useState("");
+//   const [password, setPassword] = useState("");
+//   const [errors, setErrors] = useState({});
+//   const [loading, setLoading] = useState(false);
+
+//   const validateForm = () => {
+//     const newErrors = {};
+
+//     if (!name.trim()) newErrors.name = "Name is required";
+
+//     if (!email.trim()) {
+//       newErrors.email = "Email is required";
+//     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+//       newErrors.email = "Enter a valid email";
+//     }
+
+//     if (!password) {
+//       newErrors.password = "Password is required";
+//     } else if (password.length < 6) {
+//       newErrors.password = "Minimum 6 characters required";
+//     }
+
+//     setErrors(newErrors);
+//     return Object.keys(newErrors).length === 0;
+//   };
+
+//   const handleSignUp = async () => {
+//     if (!validateForm()) return;
+
+//     setLoading(true);
+
+//     try {
+//       // 🔐 Create user
+//       const userCredential = await createUserWithEmailAndPassword(
+//         auth,
+//         email,
+//         password
+//       );
+
+//       const user = userCredential.user;
+
+//       // 🗄 Store user in Firestore
+//       await setDoc(doc(db, "users", user.uid), {
+//         name,
+//         email,
+//         createdAt: new Date(),
+//         aadharVerified: false,
+//         profileComplete: false,
+//       });
+
+//       setLoading(false);
+
+//       Alert.alert(
+//         "Account Created 🎉",
+//         `Welcome ${name}!`,
+//         [
+//           {
+//             text: "Continue",
+//             onPress: () =>
+//               navigation.navigate("AadharVerification", {
+//                 userId: user.uid,
+//               }),
+//           },
+//         ]
+//       );
+
+//       setName("");
+//       setEmail("");
+//       setPassword("");
+//       setErrors({});
+//     } catch (error) {
+//       setLoading(false);
+
+//       if (error.code === "auth/email-already-in-use") {
+//         Alert.alert(
+//           "Email Exists",
+//           "This email is already registered",
+//           [
+//             { text: "Cancel", style: "cancel" },
+//             { text: "Login", onPress: () => navigation.navigate("Login") },
+//           ]
+//         );
+//       } else if (error.code === "auth/weak-password") {
+//         Alert.alert("Weak Password", "Use a stronger password");
+//       } else if (error.code === "auth/invalid-email") {
+//         Alert.alert("Invalid Email", "Enter a valid email address");
+//       } else {
+//         Alert.alert("Error", error.message);
+//       }
+
+//       console.log("Signup error:", error);
+//     }
+//   };
+
+//   return (
+//     <KeyboardAvoidingView
+//       behavior={Platform.OS === "ios" ? "padding" : "height"}
+//       style={styles.container}
+//     >
+//       <StatusBar style="dark" />
+//       <ScrollView contentContainerStyle={styles.scroll}>
+//         <View style={styles.card}>
+//           <Text style={styles.title}>Sign Up</Text>
+
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Full Name"
+//             value={name}
+//             onChangeText={setName}
+//           />
+
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Email"
+//             keyboardType="email-address"
+//             autoCapitalize="none"
+//             value={email}
+//             onChangeText={setEmail}
+//           />
+
+//           <TextInput
+//             style={styles.input}
+//             placeholder="Password"
+//             secureTextEntry
+//             value={password}
+//             onChangeText={setPassword}
+//           />
+
+//           <TouchableOpacity
+//             style={styles.button}
+//             onPress={handleSignUp}
+//             disabled={loading}
+//           >
+//             {loading ? (
+//               <ActivityIndicator color="#fff" />
+//             ) : (
+//               <Text style={styles.buttonText}>Create Account</Text>
+//             )}
+//           </TouchableOpacity>
+
+//           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+//             <Text style={styles.link}>Already have an account? Login</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </ScrollView>
+//     </KeyboardAvoidingView>
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   container: { flex: 1, backgroundColor: "#f3f4f6" },
+//   scroll: { flexGrow: 1, justifyContent: "center", padding: 20 },
+//   card: {
+//     backgroundColor: "#fff",
+//     padding: 24,
+//     borderRadius: 16,
+//     elevation: 5,
+//   },
+//   title: {
+//     fontSize: 28,
+//     fontWeight: "bold",
+//     textAlign: "center",
+//     marginBottom: 20,
+//   },
+//   input: {
+//     borderWidth: 1,
+//     borderColor: "#e5e7eb",
+//     borderRadius: 10,
+//     padding: 14,
+//     marginBottom: 12,
+//   },
+//   button: {
+//     backgroundColor: "#39ca22",
+//     padding: 16,
+//     borderRadius: 12,
+//     alignItems: "center",
+//     marginTop: 10,
+//   },
+//   buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
+//   link: {
+//     textAlign: "center",
+//     marginTop: 16,
+//     color: "#2563eb",
+//   },
+// });
