@@ -5,8 +5,18 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { LogBox } from 'react-native';
 
+
+
+import { onAuthStateChanged } from "firebase/auth";
+
 // Import Firebase
-import { auth, db } from './firebase.config';
+import { auth, db } from "./firebaseServices";
+
+
+
+console.log(auth);
+console.log(db);
+
 
 // Import screens
 import LoginScreen from './screens/LoginScreen';
@@ -29,20 +39,15 @@ LogBox.ignoreLogs([
 const App = () => {
   useEffect(() => {
     // Initialize auth state observer
-    const unsubscribe = auth?.onAuthStateChanged ? auth.onAuthStateChanged(user => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in
-        console.log('User is signed in:', user.uid);
+        console.log("User is signed in:", user.uid);
       } else {
-        // User is signed out
-        console.log('User is signed out');
+        console.log("User is signed out");
       }
-    }) : () => {}; // Return empty function if auth is not initialized yet
+    });
 
-    // Cleanup subscription on unmount
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
+    return unsubscribe;
   }, []);
   return (
     <SafeAreaProvider>
@@ -135,3 +140,4 @@ const App = () => {
 };
 
 export default App;
+
