@@ -61,8 +61,8 @@ export default function FaceVerificationScreen({ navigation, route }) {
           validateImage(imageUri);
         } else {
           Alert.alert(
-            'Invalid Photo',
-            'Please take a photo using the camera. Gallery photos are not allowed.'
+            // 'Invalid Photo',
+            // 'Please take a photo using the camera. Gallery photos are not allowed.'
           );
         }
       }
@@ -86,10 +86,10 @@ export default function FaceVerificationScreen({ navigation, route }) {
       
       if (faceDetected) {
         setIsImageValid(true);
-        setValidationMessage('✓ Face detected! Image looks good');
+        setValidationMessage('Face detected! Image looks good');
       } else {
         setIsImageValid(false);
-        setValidationMessage('✗ No face detected. Please retake');
+        setValidationMessage('No face detected. Please retake');
       }
       setIsVerifying(false);
     }, 1500); // 1.5 second validation
@@ -116,7 +116,7 @@ export default function FaceVerificationScreen({ navigation, route }) {
       if (!faceDetected) {
         // Face not detected - show error
         Alert.alert(
-          'Face Not Detected ❌',
+          'Face Not Detected',
           'No face was detected in the photo. Please ensure:\n\n• Your face is clearly visible\n• Good lighting conditions\n• Face the camera directly\n• Remove any obstructions\n\nPlease try again.',
           [
             {
@@ -261,29 +261,7 @@ export default function FaceVerificationScreen({ navigation, route }) {
               </Text>
             </View>
           )}
-
-          {/* Instructions */}
-          <View style={styles.instructionsContainer}>
-            <Text style={styles.instructionsTitle}>📋 Important Instructions:</Text>
-            <Text style={styles.instructionText}>
-              • Take photo in real-time (Gallery not allowed)
-            </Text>
-            <Text style={styles.instructionText}>
-              • Ensure good lighting conditions
-            </Text>
-            <Text style={styles.instructionText}>
-              • Face the camera directly
-            </Text>
-            <Text style={styles.instructionText}>
-              • Remove glasses and face coverings
-            </Text>
-            <Text style={styles.instructionText}>
-              • Keep a neutral expression
-            </Text>
-            <Text style={styles.instructionText}>
-              • Make sure your face is clearly visible
-            </Text>
-          </View>
+          
 
           {/* Action Buttons */}
           {!capturedImage ? (
@@ -292,7 +270,7 @@ export default function FaceVerificationScreen({ navigation, route }) {
               onPress={handleTakePhoto}
               activeOpacity={0.8}
             >
-              <Text style={styles.cameraButtonText}>📷 Take Photo with Camera</Text>
+              <Text style={styles.cameraButtonText}>Take Photo with Camera</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -314,7 +292,7 @@ export default function FaceVerificationScreen({ navigation, route }) {
           {/* Security Note */}
           <View style={styles.noteContainer}>
             <Text style={styles.noteText}>
-              🔒 Live camera photo required for security
+              Live camera photo required for security
             </Text>
             <Text style={styles.noteText}>
               Gallery photos are not accepted for verification
