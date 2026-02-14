@@ -241,6 +241,9 @@
 // screens/OnboardingScreen.js
 import React, { useState, useRef, useEffect } from 'react';
 import onboarding1 from '../assets/images/onboarding1.jpg';
+import onboarding2 from '../assets/images/onboarding2.jpg';
+import onboarding3 from '../assets/images/onboarding3.jpg';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -271,14 +274,14 @@ const slides = [
     id: '2',
     title: 'Emergency Support',
     description: 'Find nearby help and emergency contacts quickly',
-    image: 'https://example.com/emergency-support.jpg', // Replace with your image URL
+    image: require('../assets/images/onboarding2.jpg'), // Replace with your image URL
     color: '#F44336'
   },
   {
     id: '3',
     title: 'Smart Guidance',
     description: 'Navigate safely with real-time updates',
-    image: 'https://example.com/smart-guidance.jpg', // Replace with your image URL
+    image: require('../assets/images/onboarding3.jpg'), // Replace with your image URL
     color: '#2196F3'
   },
 ];
@@ -388,18 +391,37 @@ const OnboardingScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <Animated.ScrollView
-        ref={scrollViewRef}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={handleScroll}
-        onMomentumScrollEnd={handleScrollEnd}
-        scrollEventThrottle={16}
-        contentContainerStyle={styles.scrollView}
-      >
-        {slides.map((item, index) => renderItem({ item, index }))}
-      </Animated.ScrollView>
+// Replace your current ScrollView with this:
+<Animated.ScrollView
+  ref={scrollViewRef}
+  horizontal
+  pagingEnabled
+  showsHorizontalScrollIndicator={false}
+  onScroll={handleScroll}
+  onMomentumScrollEnd={handleScrollEnd}
+  scrollEventThrottle={16}
+  contentContainerStyle={styles.scrollView}
+>
+  {slides.map((item) => (
+    <View key={item.id} style={{ width }}>
+      <View style={styles.slide}>
+        <View style={styles.imageContainer}>
+          <Image 
+            source={item.image} 
+            style={styles.image} 
+            resizeMode="cover" 
+          />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.description}>{item.description}</Text>
+        </View>
+      </View>
+    </View>
+  ))}
+</Animated.ScrollView>
+
+
 
       <View style={styles.footer}>
         {renderDots()}
