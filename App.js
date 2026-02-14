@@ -17,9 +17,6 @@ import SettingsScreen from './screens/SettingsScreen';
 import EmergencyServicesScreen from './screens/EmergencyServicesScreen';
 
 
-import './firebaseConfig';
-
-
 const Stack = createStackNavigator();
 
 // Ignore specific warnings
