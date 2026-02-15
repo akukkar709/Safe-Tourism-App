@@ -16,9 +16,11 @@ import HomeScreen from './screens/HomeScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import EmergencyServicesScreen from './screens/EmergencyServicesScreen';
 
+
+import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from 'react';
 import { auth } from './firebaseConfig';
-import { onAuthStateChanged } from 'firebase/auth';
+
 
 
 const Stack = createStackNavigator();
@@ -33,18 +35,13 @@ LogBox.ignoreLogs([
 
 const App = () => {
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log('User is signed in');
-      } else {
-        console.log('User is signed out');
-      }
-    });
- 
-    // Cleanup subscription
-    return () => unsubscribe();
-  }, []);
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    console.log("User:", user);
+  });
+
+  return unsubscribe;
+}, []);
 
 
 
