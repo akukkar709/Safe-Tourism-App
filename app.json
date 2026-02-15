@@ -21,7 +21,7 @@
       }
     },
     "android": {
-    "package": "com.mobileapp",
+      "package": "com.mobileapp",
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
@@ -33,7 +33,6 @@
         "android.permission.RECORD_AUDIO"
       ],
       "runtimeVersion": "1.0.0"
-      
     },
     "plugins": [
       [
@@ -48,7 +47,9 @@
           "photosPermission": "The app accesses your photos for face verification."
         }
       ],
-      "expo-router"
+      "expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
     ],
     "web": {
       "favicon": "./assets/favicon.png"

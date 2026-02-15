@@ -16,6 +16,10 @@ import HomeScreen from './screens/HomeScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import EmergencyServicesScreen from './screens/EmergencyServicesScreen';
 
+import { useEffect } from 'react';
+import { auth } from './firebaseConfig';
+import { onAuthStateChanged } from 'firebase/auth';
+
 
 const Stack = createStackNavigator();
 
@@ -25,7 +29,25 @@ LogBox.ignoreLogs([
   'AsyncStorage has been extracted',
 ]);
 
+
+
 const App = () => {
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log('User is signed in');
+      } else {
+        console.log('User is signed out');
+      }
+    });
+ 
+    // Cleanup subscription
+    return () => unsubscribe();
+  }, []);
+
+
+
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -49,5 +71,8 @@ const App = () => {
     </SafeAreaProvider>
   );
 };
+
+
+
 
 export default App;

@@ -352,6 +352,7 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { useRef } from 'react';
 import {
   View,
   Text,
@@ -369,8 +370,18 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { auth } from '../firebaseConfig'; // 🔁 adjust path if needed
+import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
+
 import { signInWithPhoneNumber } from 'firebase/auth';
+
+
+
+import { auth } from '../firebaseConfig';
+import { firebaseConfig } from '../firebaseConfig'; // we’ll export this
+
+
+
+
 
 const SignUpScreen = () => {
   const [name, setName] = useState('');
@@ -381,8 +392,23 @@ const SignUpScreen = () => {
   const [countdown, setCountdown] = useState(30);
   const [isResendDisabled, setIsResendDisabled] = useState(false);
   const [confirmation, setConfirmation] = useState(null);
+  const recaptchaVerifier = useRef(null);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    // Setup reCAPTCHA verifier
+    recaptchaVerifier.current = new RecaptchaVerifier(auth, 'recaptcha-container', {
+      'size': 'invisible',
+    });
+ 
+    return () => {
+      if (recaptchaVerifier.current) {
+        recaptchaVerifier.current.clear();
+      }
+    };
+  }, []);
+
 
   useEffect(() => {
     let timer;
@@ -399,6 +425,7 @@ const SignUpScreen = () => {
       Alert.alert('Error', 'Please enter your name');
       return;
     }
+
     if (!/^\+91\d{10}$/.test(mobile)) {
       Alert.alert('Error', 'Please enter a valid 10-digit mobile number with +91');
       return;
@@ -407,21 +434,41 @@ const SignUpScreen = () => {
     try {
       setIsLoading(true);
 
-      const confirmationResult = await signInWithPhoneNumber(auth, mobile);
-      setConfirmation(confirmationResult);
 
-      setShowOtpField(true);
-      setIsResendDisabled(true);
-      setCountdown(30);
-
-      Alert.alert('Success', 'OTP sent to your mobile number');
-    } catch (error) {
-      console.error('Error sending OTP:', error);
-      Alert.alert('Error', error.message || 'Failed to send OTP');
-    } finally {
-      setIsLoading(false);
+      // Setup recaptcha if not already done
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+      });
     }
-  };
+
+     let appVerifier;
+      if (Platform.OS === 'web') {
+        appVerifier = window.recaptchaVerifier;
+      } else {
+        // For React Native, we don't need to create a RecaptchaVerifier
+        // Firebase Auth for React Native handles this automatically
+        appVerifier = null;
+      }
+ 
+
+    const confirmation = await signInWithPhoneNumber(auth, mobile, appVerifier);
+    
+    setConfirmation(confirmation);
+    setShowOtpField(true);
+    setIsResendDisabled(true);
+    setCountdown(30);
+    Alert.alert('Success', 'OTP sent to your mobile number');
+  } catch (error) {
+    console.error('Error sending OTP:', error);
+    Alert.alert('Error', error.message || 'Failed to send OTP. Please try again.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  
+
 
   const handleResendOtp = async () => {
     if (isResendDisabled) return;
@@ -434,27 +481,43 @@ const SignUpScreen = () => {
       return;
     }
 
-    try {
+  //   try {
+  //     setIsLoading(true);
+
+  //     if (!confirmation) {
+  //       Alert.alert('Error', 'Please request OTP first');
+  //       return;
+  //     }
+
+  //     const result = await confirmation.confirm(otp);
+  //     console.log('Logged in user:', result.user);
+
+  //     Alert.alert('Success', 'Mobile number verified successfully');
+  //     navigation.navigate('AadharVerification', { name, mobile });
+
+  //   } catch (error) {
+  //     console.error('Error verifying OTP:', error);
+  //     Alert.alert('Error', 'Invalid OTP. Please try again.');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+
+  try {
       setIsLoading(true);
-
-      if (!confirmation) {
-        Alert.alert('Error', 'Please request OTP first');
-        return;
-      }
-
-      const result = await confirmation.confirm(otp);
-      console.log('Logged in user:', result.user);
-
+      await confirmationResult.confirm(otp);
       Alert.alert('Success', 'Mobile number verified successfully');
       navigation.navigate('AadharVerification', { name, mobile });
-
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      Alert.alert('Error', 'Invalid OTP. Please try again.');
+      Alert.alert('Error', error.message || 'Invalid OTP. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
+
+
 
   return (
     <KeyboardAvoidingView
@@ -462,6 +525,8 @@ const SignUpScreen = () => {
       style={styles.container}
     >
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+
+      <View id="recaptcha-container" />
 
       <View style={styles.header}>
         <TouchableOpacity
