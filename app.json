@@ -47,9 +47,7 @@
           "photosPermission": "The app accesses your photos for face verification."
         }
       ],
-      "expo-router",
-      "@react-native-firebase/app",
-      "@react-native-firebase/auth"
+      "expo-router"
     ],
     "web": {
       "favicon": "./assets/favicon.png"

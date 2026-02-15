@@ -390,7 +390,6 @@ const OnboardingScreen = () => {
         </TouchableOpacity>
       </View>
 
-// Replace your current ScrollView with this:
 <Animated.ScrollView
   ref={scrollViewRef}
   horizontal
